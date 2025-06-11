@@ -17,7 +17,7 @@ const Playlist = PlaylistModel(sequelize);
 const PlaylistFilme = PlaylistFilmeModel(sequelize);
 const Comentario = ComentarioModel(sequelize);
 
-// RELACIONAMENTOS CANALFILME
+// RELACIONAMENTOS
 Canal.belongsToMany(Filme, {
   through: CanalFilme,
   foreignKey: 'id_canal',
@@ -26,26 +26,9 @@ Filme.belongsToMany(Canal, {
   through: CanalFilme,
   foreignKey: 'id_filme',
 });
-// RELACIONAMENTOS PLAYLISTFILME
-Playlist.belongsToMany(Filme, {
-  through: PlaylistFilme,
-  foreignKey: 'id_playlist',
-  otherKey: 'id_filme'
-});
-Filme.belongsToMany(Playlist, {
-  through: PlaylistFilme,
-  foreignKey: 'id_filme',
-  otherKey: 'id_playlist'
-});
 
 Usuario.hasMany(Playlist, { foreignKey: 'id_usuario' });
 Playlist.belongsTo(Usuario, { foreignKey: 'id_usuario' });
-
-Canal.hasMany(Playlist, { foreignKey: 'id_canal' });
-Playlist.belongsTo(Canal, { foreignKey: 'id_canal' });
-
-Filme.hasMany(Playlist, { foreignKey: 'id_filme' });
-Playlist.belongsTo(Filme, { foreignKey: 'id_filme' });
 
 Usuario.hasMany(Comentario, { foreignKey: 'id_usuario' });
 Comentario.belongsTo(Usuario, { foreignKey: 'id_usuario' });
@@ -56,8 +39,28 @@ Comentario.belongsTo(Filme, { foreignKey: 'id_filme' });
 Usuario.hasMany(Mensalidade, { foreignKey: 'id_usuario' });
 Mensalidade.belongsTo(Usuario, { foreignKey: 'id_usuario' });
 
-Filme.hasMany(Playlist, { foreignKey: 'id_filme' });
-Playlist.belongsTo(Filme, { foreignKey: 'id_filme' });
+
+Playlist.belongsToMany(Filme, {
+  through: PlaylistFilme,
+  foreignKey: 'id_playlist',
+  otherKey: 'id_filme',
+  as: 'filmes',
+});
+
+Filme.belongsToMany(Playlist, {
+  through: PlaylistFilme,
+  foreignKey: 'id_filme',
+  otherKey: 'id_playlist',
+  as: 'playlists',
+});
+
+
+Playlist.hasMany(PlaylistFilme, { foreignKey: 'id_playlist' });
+PlaylistFilme.belongsTo(Playlist, { foreignKey: 'id_playlist' });
+
+Filme.hasMany(PlaylistFilme, { foreignKey: 'id_filme' });
+PlaylistFilme.belongsTo(Filme, { foreignKey: 'id_filme' });
+
 
 export {
   sequelize,

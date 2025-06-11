@@ -1,20 +1,52 @@
-  import { expect } from 'chai';
-  import { sequelize, db } from './setup.js';
+import { expect } from 'chai';
+import { sequelize, db } from './setup.js';
 
-  describe('Configuração do Ambiente de Testes', () => {
-    it('Deve conectar ao banco PostgreSQL', async () => {
-      await sequelize.authenticate();
-      expect(sequelize.config.database).to.equal('playlist_test');
+describe('Canal Model', () => {
+  it('Deve criar um canal com dados válidos', async () => {
+    const canal = await db.Canal.create({
+      nome: 'Canal Teste',
+      data_criacao: '2023-01-01',
+      genero_tema: 'Entretenimento',
     });
 
-    it('Deve criar um usuário no banco PostgreSQL', async () => {
-      const usuario = await db.Usuario.create({
-        login: 'teste123',
-        nome: 'Usuário Teste',
-      });
-
-      expect(usuario).to.have.property('id');
-      expect(usuario.login).to.equal('teste123');
-      expect(usuario.nome).to.equal('Usuário Teste');
-    });
+    expect(canal).to.have.property('id');
+    expect(canal.nome).to.equal('Canal Teste');
+    expect(canal.genero_tema).to.equal('Entretenimento');
   });
+
+  it('Não deve criar um canal sem nome', async () => {
+    try {
+      await db.Canal.create({
+        data_criacao: '2023-01-01',
+        genero_tema: 'Entretenimento',
+      });
+      expect.fail('Deveria ter lançado um erro de validação');
+    } catch (error) {
+      expect(error.name).to.equal('SequelizeValidationError');
+    }
+  });
+
+  it('Não deve criar um canal sem data_criacao', async () => {
+    try {
+      await db.Canal.create({
+        nome: 'Canal Sem Data',
+        genero_tema: 'Entretenimento',
+      });
+      expect.fail('Deveria ter lançado um erro de validação');
+    } catch (error) {
+      expect(error.name).to.equal('SequelizeValidationError');
+    }
+  });
+
+  it('Não deve criar um canal sem genero_tema', async () => {
+    try {
+      await db.Canal.create({
+        nome: 'Canal Sem Tema',
+        data_criacao: '2023-01-01',
+      });
+      expect.fail('Deveria ter lançado um erro de validação');
+    } catch (error) {
+      expect(error.name).to.equal('SequelizeValidationError');
+    }
+  });
+});

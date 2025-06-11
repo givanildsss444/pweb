@@ -48,8 +48,7 @@ export default (sequelize) =>
       type: DataTypes.ENUM('pago', 'pendente', 'atrasado'),
       allowNull: false,
       defaultValue: 'pendente',
-    }
-    ,
+    },
   }, {
     tableName: 'mensalidades',
     timestamps: false,

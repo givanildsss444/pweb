@@ -98,7 +98,7 @@ describe('Mensalidade Model', () => {
         id_usuario: usuario.id,
         valor: 99.90,
         data_pagamento: new Date('2023-10-01'),
-        ano_mes: '1819-12',
+        ano_mes: '1899-12',
         status: 'pago',
       });
       expect.fail('Deveria ter lançado um erro de validação');
